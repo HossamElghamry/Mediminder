@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:medicine_reminder/src/common/covert_minute.dart';
 import 'package:medicine_reminder/src/models/day.dart';
 import 'package:medicine_reminder/src/models/medicine_type.dart';
 import 'package:medicine_reminder/src/ui/homepage/new_entry_bloc.dart';
 import 'package:provider/provider.dart';
 
-class NewEntry extends StatelessWidget {
+class NewEntry extends StatefulWidget {
+  @override
+  _NewEntryState createState() => _NewEntryState();
+}
+
+class _NewEntryState extends State<NewEntry> {
+  TextEditingController nameController = TextEditingController();
+
+  TextEditingController dosageController = TextEditingController();
+
+  void dispose() {
+    nameController.dispose();
+    dosageController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     NewEntryBloc _newEntryBloc = NewEntryBloc();
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -35,10 +51,11 @@ class NewEntry extends StatelessWidget {
               title: "Medicine Name",
               isRequired: true,
             ),
-            TextField(
+            TextFormField(
               style: TextStyle(
                 fontSize: 16,
               ),
+              controller: nameController,
               textCapitalization: TextCapitalization.words,
               decoration: InputDecoration(
                 border: UnderlineInputBorder(),
@@ -51,7 +68,8 @@ class NewEntry extends StatelessWidget {
               title: "Dosage in mg",
               isRequired: true,
             ),
-            TextField(
+            TextFormField(
+              controller: dosageController,
               keyboardType: TextInputType.number,
               style: TextStyle(
                 fontSize: 16,
@@ -63,7 +81,7 @@ class NewEntry extends StatelessWidget {
             ),
             PanelTitle(
               title: "Medicine Type",
-              isRequired: true,
+              isRequired: false,
             ),
             Padding(
               padding: EdgeInsets.only(top: 10.0),
@@ -106,12 +124,13 @@ class NewEntry extends StatelessWidget {
                   }),
             ),
             PanelTitle(
-              title: "Day Selection",
+              title: "Interval Selection",
               isRequired: true,
             ),
-            ScheduleCheckBoxes(),
+            //ScheduleCheckBoxes(),
+            IntervalSelection(),
             PanelTitle(
-              title: "Time Selection per Day",
+              title: "Starting Time",
               isRequired: true,
             ),
             SelectTime(),
@@ -129,7 +148,13 @@ class NewEntry extends StatelessWidget {
                 child: FlatButton(
                   color: Color(0xFF3EB16F),
                   shape: StadiumBorder(),
-                  onPressed: () {},
+                  onPressed: () {
+                    print(nameController.value);
+                    print(dosageController.value);
+                    print(_newEntryBloc.selectedMedicineType.value);
+                    print(_newEntryBloc.selectedInterval$.value);
+                    print(_newEntryBloc.selectedTimeOfDay$.value);
+                  },
                   child: Center(
                     child: Text(
                       "CONFIRM",
@@ -150,6 +175,96 @@ class NewEntry extends StatelessWidget {
   }
 }
 
+class IntervalSelection extends StatefulWidget {
+  @override
+  _IntervalSelectionState createState() => _IntervalSelectionState();
+}
+
+class _IntervalSelectionState extends State<IntervalSelection> {
+  var _intervals = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ];
+  var _selected = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
+
+    return Padding(
+      padding: EdgeInsets.only(top: 8.0),
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "Remind me every  ",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            DropdownButton<int>(
+              elevation: 4,
+              value: _selected,
+              items: _intervals.map((int value) {
+                return DropdownMenuItem<int>(
+                  value: value,
+                  child: Text(
+                    value.toString(),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: (newVal) {
+                setState(() {
+                  _selected = newVal;
+                  _newEntryBloc.updateInterval(newVal);
+                });
+              },
+            ),
+            Text(
+              _selected == 1 ? " hour" : " hours",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class SelectTime extends StatefulWidget {
   @override
   _SelectTimeState createState() => _SelectTimeState();
@@ -157,8 +272,10 @@ class SelectTime extends StatefulWidget {
 
 class _SelectTimeState extends State<SelectTime> {
   TimeOfDay _time = TimeOfDay(hour: 0, minute: 00);
+  bool _clicked = false;
 
   Future<TimeOfDay> _selectTime(BuildContext context) async {
+    final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
     final TimeOfDay picked = await showTimePicker(
       context: context,
       initialTime: _time,
@@ -166,6 +283,9 @@ class _SelectTimeState extends State<SelectTime> {
     if (picked != null && picked != _time) {
       setState(() {
         _time = picked;
+        _clicked = true;
+        _newEntryBloc.updateTime(
+            ["${_time.hour}", "${convertToMinutes(_time.minute.toString())}"]);
       });
     }
     return picked;
@@ -174,31 +294,38 @@ class _SelectTimeState extends State<SelectTime> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(
-            "Select Time 1*",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
+          Padding(
+            padding: EdgeInsets.only(top: 8.0, bottom: 4),
+            child: FlatButton(
+              color: Color(0xFF3EB16F),
+              shape: StadiumBorder(),
+              onPressed: () {
+                _selectTime(context);
+              },
+              child: Center(
+                child: Text(
+                  _clicked == false ? "Pick Time" : "Edit Time",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
             ),
           ),
-          FlatButton(
-            color: Color(0xFF3EB16F),
-            shape: StadiumBorder(),
-            onPressed: () {
-              _selectTime(context);
-            },
-            child: Center(
-              child: Text(
-                "Pick Time",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
+          Center(
+            child: Text(
+              _clicked == false
+                  ? ""
+                  : "Selected starting time: ${_time.hour}:${convertToMinutes(_time.minute.toString())}",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -390,7 +517,7 @@ class PanelTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 14),
+      padding: EdgeInsets.only(top: 12, bottom: 4),
       child: Text.rich(
         TextSpan(children: <TextSpan>[
           TextSpan(

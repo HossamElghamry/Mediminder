@@ -10,15 +10,33 @@ class NewEntryBloc {
   BehaviorSubject<List<Day>> _checkedDays$;
   BehaviorSubject<List<Day>> get checkedDays$ => _checkedDays$;
 
+  BehaviorSubject<int> _selectedInterval$;
+  BehaviorSubject<int> get selectedInterval$ => _selectedInterval$;
+
+  BehaviorSubject<List<String>> _selectedTimeOfDay$;
+  BehaviorSubject<List<String>> get selectedTimeOfDay$ => _selectedTimeOfDay$;
+
   NewEntryBloc() {
     _selectedMedicineType$ =
         BehaviorSubject<MedicineType>.seeded(MedicineType.None);
     _checkedDays$ = BehaviorSubject<List<Day>>.seeded([]);
+    _selectedTimeOfDay$ = BehaviorSubject<List<String>>.seeded(["0", "0"]);
+    _selectedInterval$ = BehaviorSubject<int>.seeded(1);
   }
 
   void dispose() {
     _selectedMedicineType$.close();
     _checkedDays$.close();
+    _selectedTimeOfDay$.close();
+    _selectedInterval$.close();
+  }
+
+  void updateInterval(int interval) {
+    _selectedInterval$.add(interval);
+  }
+
+  void updateTime(List<String> time) {
+    _selectedTimeOfDay$.add(time);
   }
 
   void addtoDays(Day day) {
