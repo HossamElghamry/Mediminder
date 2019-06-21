@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:medicine_reminder/src/common/covert_minute.dart';
+import 'package:medicine_reminder/src/global_bloc.dart';
 import 'package:medicine_reminder/src/models/day.dart';
+import 'package:medicine_reminder/src/models/medicine.dart';
 import 'package:medicine_reminder/src/models/medicine_type.dart';
 import 'package:medicine_reminder/src/ui/homepage/new_entry_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NewEntry extends StatefulWidget {
   @override
@@ -15,6 +20,7 @@ class _NewEntryState extends State<NewEntry> {
   TextEditingController dosageController = TextEditingController();
 
   void dispose() {
+    super.dispose();
     nameController.dispose();
     dosageController.dispose();
   }
@@ -22,6 +28,8 @@ class _NewEntryState extends State<NewEntry> {
   @override
   Widget build(BuildContext context) {
     NewEntryBloc _newEntryBloc = NewEntryBloc();
+    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
+
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
@@ -147,12 +155,28 @@ class _NewEntryState extends State<NewEntry> {
                 child: FlatButton(
                   color: Color(0xFF3EB16F),
                   shape: StadiumBorder(),
-                  onPressed: () {
-                    print(nameController.value);
-                    print(dosageController.value);
-                    print(_newEntryBloc.selectedMedicineType.value);
-                    print(_newEntryBloc.selectedInterval$.value);
-                    print(_newEntryBloc.selectedTimeOfDay$.value);
+                  onPressed: () async {
+                    Medicine temp = Medicine(
+                      medicineName: nameController.value.text,
+                      dosage: int.parse(dosageController.value.text),
+                      medicineType:
+                          _newEntryBloc.selectedMedicineType.value.toString(),
+                      interval: _newEntryBloc.selectedInterval$.value,
+                      startTime: _newEntryBloc.selectedTimeOfDay$.value,
+                    );
+                    _globalBloc.updateMedicineList(temp);
+                    Map<String, dynamic> tempMap = temp.toJson();
+                    SharedPreferences sharedUser =
+                        await SharedPreferences.getInstance();
+                    String user = jsonEncode(tempMap);
+                    sharedUser.setString('medicine', user);
+                    Navigator.of(context).pop();
+
+                    // print(nameController.value);
+                    // print(dosageController.value);
+                    print(_newEntryBloc.selectedMedicineType.value.toString());
+                    // print(_newEntryBloc.selectedInterval$.value);
+                    // print(_newEntryBloc.selectedTimeOfDay$.value);
                   },
                   child: Center(
                     child: Text(
@@ -211,7 +235,6 @@ class _IntervalSelectionState extends State<IntervalSelection> {
   @override
   Widget build(BuildContext context) {
     final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
-
     return Padding(
       padding: EdgeInsets.only(top: 8.0),
       child: Container(
@@ -284,7 +307,7 @@ class _SelectTimeState extends State<SelectTime> {
         _time = picked;
         _clicked = true;
         _newEntryBloc.updateTime(
-            ["${_time.hour}", "${convertToMinutes(_time.minute.toString())}"]);
+            "${_time.hour}" + "${convertToMinutes(_time.minute.toString())}");
       });
     }
     return picked;
@@ -401,108 +424,108 @@ class MedicineTypeColumn extends StatelessWidget {
   }
 }
 
-class ScheduleCheckBoxes extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
-    return StreamBuilder<List<Day>>(
-        stream: _newEntryBloc.checkedDays$,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return CircularProgressIndicator();
-          } else {
-            return Padding(
-              padding: EdgeInsets.only(top: 12.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    BuildDay(
-                      text: "Sat",
-                      day: Day.Saturday,
-                      isSelected:
-                          snapshot.data.contains(Day.Saturday) ? true : false,
-                    ),
-                    BuildDay(
-                      text: "Sun",
-                      day: Day.Sunday,
-                      isSelected:
-                          snapshot.data.contains(Day.Sunday) ? true : false,
-                    ),
-                    BuildDay(
-                      text: "Mon",
-                      day: Day.Monday,
-                      isSelected:
-                          snapshot.data.contains(Day.Monday) ? true : false,
-                    ),
-                    BuildDay(
-                      text: "Tue",
-                      day: Day.Tuesday,
-                      isSelected:
-                          snapshot.data.contains(Day.Tuesday) ? true : false,
-                    ),
-                    BuildDay(
-                      text: "Wed",
-                      day: Day.Wednesday,
-                      isSelected:
-                          snapshot.data.contains(Day.Wednesday) ? true : false,
-                    ),
-                    BuildDay(
-                      text: "Thu",
-                      day: Day.Thursday,
-                      isSelected:
-                          snapshot.data.contains(Day.Thursday) ? true : false,
-                    ),
-                    BuildDay(
-                      text: "Fri",
-                      day: Day.Friday,
-                      isSelected:
-                          snapshot.data.contains(Day.Friday) ? true : false,
-                    ),
-                  ]),
-            );
-          }
-        });
-  }
-}
+// class ScheduleCheckBoxes extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
+//     return StreamBuilder<List<Day>>(
+//         stream: _newEntryBloc.checkedDays$,
+//         builder: (context, snapshot) {
+//           if (!snapshot.hasData) {
+//             return CircularProgressIndicator();
+//           } else {
+//             return Padding(
+//               padding: EdgeInsets.only(top: 12.0),
+//               child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                   children: <Widget>[
+//                     BuildDay(
+//                       text: "Sat",
+//                       day: Day.Saturday,
+//                       isSelected:
+//                           snapshot.data.contains(Day.Saturday) ? true : false,
+//                     ),
+//                     BuildDay(
+//                       text: "Sun",
+//                       day: Day.Sunday,
+//                       isSelected:
+//                           snapshot.data.contains(Day.Sunday) ? true : false,
+//                     ),
+//                     BuildDay(
+//                       text: "Mon",
+//                       day: Day.Monday,
+//                       isSelected:
+//                           snapshot.data.contains(Day.Monday) ? true : false,
+//                     ),
+//                     BuildDay(
+//                       text: "Tue",
+//                       day: Day.Tuesday,
+//                       isSelected:
+//                           snapshot.data.contains(Day.Tuesday) ? true : false,
+//                     ),
+//                     BuildDay(
+//                       text: "Wed",
+//                       day: Day.Wednesday,
+//                       isSelected:
+//                           snapshot.data.contains(Day.Wednesday) ? true : false,
+//                     ),
+//                     BuildDay(
+//                       text: "Thu",
+//                       day: Day.Thursday,
+//                       isSelected:
+//                           snapshot.data.contains(Day.Thursday) ? true : false,
+//                     ),
+//                     BuildDay(
+//                       text: "Fri",
+//                       day: Day.Friday,
+//                       isSelected:
+//                           snapshot.data.contains(Day.Friday) ? true : false,
+//                     ),
+//                   ]),
+//             );
+//           }
+//         });
+//   }
+// }
 
-class BuildDay extends StatelessWidget {
-  final String text;
-  final Day day;
-  final bool isSelected;
+// class BuildDay extends StatelessWidget {
+//   final String text;
+//   final Day day;
+//   final bool isSelected;
 
-  BuildDay(
-      {Key key,
-      @required this.text,
-      @required this.day,
-      @required this.isSelected})
-      : super(key: key);
+//   BuildDay(
+//       {Key key,
+//       @required this.text,
+//       @required this.day,
+//       @required this.isSelected})
+//       : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(
-          text,
-          style: TextStyle(
-            color: Color(0xFF3EB16F),
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        Checkbox(
-          value: isSelected,
-          activeColor: Color(0xFF3EB16F),
-          onChanged: (value) {
-            _newEntryBloc.addtoDays(day);
-          },
-        ),
-      ],
-    );
-    ;
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
+//     return Column(
+//       mainAxisAlignment: MainAxisAlignment.center,
+//       children: <Widget>[
+//         Text(
+//           text,
+//           style: TextStyle(
+//             color: Color(0xFF3EB16F),
+//             fontSize: 14,
+//             fontWeight: FontWeight.w700,
+//           ),
+//         ),
+//         Checkbox(
+//           value: isSelected,
+//           activeColor: Color(0xFF3EB16F),
+//           onChanged: (value) {
+//             _newEntryBloc.addtoDays(day);
+//           },
+//         ),
+//       ],
+//     );
+//     ;
+//   }
+// }
 
 class PanelTitle extends StatelessWidget {
   final String title;

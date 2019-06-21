@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:medicine_reminder/src/global_bloc.dart';
 import 'package:medicine_reminder/src/models/day.dart';
 import 'package:medicine_reminder/src/models/duration.dart';
+import 'package:medicine_reminder/src/models/medicine.dart';
+import 'package:medicine_reminder/src/models/medicine_type.dart';
 import 'package:medicine_reminder/src/ui/homepage/new_entry.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,7 +30,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalBloc globalBloc = Provider.of<GlobalBloc>(context);
+    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF3EB16F),
@@ -42,7 +44,7 @@ class _HomePageState extends State<HomePage> {
               child: TopContainer(),
             ),
             StreamBuilder<Object>(
-                stream: globalBloc.selectedPeriod$,
+                stream: _globalBloc.selectedPeriod$,
                 builder: (context, snapshot) {
                   return AnimatedContainer(
                       duration: Duration(milliseconds: 500),
@@ -53,7 +55,10 @@ class _HomePageState extends State<HomePage> {
                 }),
             Flexible(
               flex: 7,
-              child: BottomContainer(),
+              child: Provider<GlobalBloc>.value(
+                child: BottomContainer(),
+                value: _globalBloc,
+              ),
             ),
           ],
         ),
@@ -374,26 +379,82 @@ class MiddleContainer extends StatelessWidget {
 class BottomContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color(0xFFF6F8FC),
-      child: GridView.count(
-        crossAxisCount: 2,
-        children: <Widget>[
-          MedicineCard(),
-          MedicineCard(),
-          MedicineCard(),
-          MedicineCard()
-        ],
-      ),
-    );
+    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
+    return StreamBuilder<Medicine>(
+        stream: _globalBloc.medicineList$,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Container(
+              child: Center(
+                child: Text("Please insert desired medicines"),
+              ),
+            );
+          } else {
+            return Container(
+              color: Color(0xFFF6F8FC),
+              child: GridView.builder(
+                gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
+                itemCount: 1,
+                itemBuilder: (context, index) {
+                  return MedicineCard(
+                    snapshot.data.medicineName,
+                    snapshot.data.medicineType.toString().substring(13),
+                    snapshot.data.interval,
+                  );
+                },
+              ),
+            );
+          }
+        });
   }
 }
 
 class MedicineCard extends StatelessWidget {
+  final String name;
+  final String type;
+  final int interval;
+
+  MedicineCard(this.name, this.type, this.interval);
+
+  Icon makeIcon(double size) {
+    if (type == "Bottle") {
+      return Icon(
+        IconData(0xe900, fontFamily: "Ic"),
+        color: Color(0xFF3EB16F),
+        size: size,
+      );
+    } else if (type == "Pill") {
+      return Icon(
+        IconData(0xe901, fontFamily: "Ic"),
+        color: Color(0xFF3EB16F),
+        size: size,
+      );
+    } else if (type == "Syringe") {
+      return Icon(
+        IconData(0xe902, fontFamily: "Ic"),
+        color: Color(0xFF3EB16F),
+        size: size,
+      );
+    } else if (type == "Tablet") {
+      return Icon(
+        IconData(0xe903, fontFamily: "Ic"),
+        color: Color(0xFF3EB16F),
+        size: size,
+      );
+    }
+    return Icon(
+      Icons.error,
+      color: Color(0xFF3EB16F),
+      size: 32,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(type);
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(10.0),
       child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -403,20 +464,18 @@ class MedicineCard extends StatelessWidget {
               child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Icon(
-                Icons.error,
-                color: Color(0xFF3EB16F),
-                size: 31,
-              ),
+              makeIcon(50.0),
               Text(
-                "Antibiotic",
+                name,
                 style: TextStyle(
                     fontSize: 22,
                     color: Color(0xFF3EB16F),
                     fontWeight: FontWeight.w500),
               ),
               Text(
-                "1 times today",
+                interval == 1
+                    ? "Every " + interval.toString() + " hour"
+                    : "Every " + interval.toString() + " hour(s)";,
                 style: TextStyle(
                     fontSize: 16,
                     color: Color(0xFFC9C9C9),
