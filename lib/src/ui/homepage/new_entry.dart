@@ -12,7 +12,6 @@ class NewEntry extends StatefulWidget {
 
 class _NewEntryState extends State<NewEntry> {
   TextEditingController nameController = TextEditingController();
-
   TextEditingController dosageController = TextEditingController();
 
   void dispose() {
