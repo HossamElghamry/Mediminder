@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:medicine_reminder/src/common/covert_minute.dart';
+import 'package:medicine_reminder/src/common/convert_time.dart';
 import 'package:medicine_reminder/src/global_bloc.dart';
-import 'package:medicine_reminder/src/models/day.dart';
 import 'package:medicine_reminder/src/models/medicine.dart';
 import 'package:medicine_reminder/src/models/medicine_type.dart';
-import 'package:medicine_reminder/src/ui/homepage/new_entry_bloc.dart';
+import 'package:medicine_reminder/src/ui/new_entry/new_entry_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class NewEntry extends StatefulWidget {
   @override
@@ -36,7 +32,7 @@ class _NewEntryState extends State<NewEntry> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(
-          color: Color(0xFF3EB16F), //change your color here
+          color: Color(0xFF3EB16F),
         ),
         centerTitle: true,
         title: Text(
@@ -156,7 +152,7 @@ class _NewEntryState extends State<NewEntry> {
                   color: Color(0xFF3EB16F),
                   shape: StadiumBorder(),
                   onPressed: () async {
-                    Medicine temp = Medicine(
+                    Medicine newEntryMedicine = Medicine(
                       medicineName: nameController.value.text,
                       dosage: int.parse(dosageController.value.text),
                       medicineType:
@@ -164,19 +160,8 @@ class _NewEntryState extends State<NewEntry> {
                       interval: _newEntryBloc.selectedInterval$.value,
                       startTime: _newEntryBloc.selectedTimeOfDay$.value,
                     );
-                    _globalBloc.updateMedicineList(temp);
-                    Map<String, dynamic> tempMap = temp.toJson();
-                    SharedPreferences sharedUser =
-                        await SharedPreferences.getInstance();
-                    String user = jsonEncode(tempMap);
-                    sharedUser.setString('medicine', user);
+                    _globalBloc.updateMedicineList(newEntryMedicine);
                     Navigator.of(context).pop();
-
-                    // print(nameController.value);
-                    // print(dosageController.value);
-                    print(_newEntryBloc.selectedMedicineType.value.toString());
-                    // print(_newEntryBloc.selectedInterval$.value);
-                    // print(_newEntryBloc.selectedTimeOfDay$.value);
                   },
                   child: Center(
                     child: Text(
@@ -306,8 +291,8 @@ class _SelectTimeState extends State<SelectTime> {
       setState(() {
         _time = picked;
         _clicked = true;
-        _newEntryBloc.updateTime(
-            "${_time.hour}" + "${convertToMinutes(_time.minute.toString())}");
+        _newEntryBloc.updateTime("${convertTime(_time.hour.toString())}" +
+            "${convertTime(_time.minute.toString())}");
       });
     }
     return picked;
@@ -343,7 +328,7 @@ class _SelectTimeState extends State<SelectTime> {
             child: Text(
               _clicked == false
                   ? ""
-                  : "Selected starting time: ${_time.hour}:${convertToMinutes(_time.minute.toString())}",
+                  : "Selected starting time: ${convertTime(_time.hour.toString())}:${convertTime(_time.minute.toString())}",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 16,
