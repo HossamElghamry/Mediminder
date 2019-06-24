@@ -205,10 +205,17 @@ class BottomContainer extends StatelessWidget {
     return StreamBuilder<List<Medicine>>(
       stream: _globalBloc.medicineList$,
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+        if (snapshot.data.length == 0) {
           return Container(
             child: Center(
-              child: Text("Please insert desired medicines"),
+              child: Text(
+                "Press + to add a reminder",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 24,
+                    color: Color(0xFFC9C9C9),
+                    fontWeight: FontWeight.bold),
+              ),
             ),
           );
         } else {

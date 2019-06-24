@@ -40,9 +40,10 @@ class MedicineDetails extends StatelessWidget {
               ExtendedSection(medicine: medicine),
               Padding(
                   padding: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.height * 0.06,
-                      right: MediaQuery.of(context).size.height * 0.06,
-                      top: 25),
+                    left: MediaQuery.of(context).size.height * 0.06,
+                    right: MediaQuery.of(context).size.height * 0.06,
+                    top: 25,
+                  ),
                   child: Container(
                       width: 280,
                       height: 70,
@@ -191,7 +192,7 @@ class ExtendedSection extends StatelessWidget {
             fieldTitle: "Dose",
             fieldInfo: "Every " +
                 medicine.interval.toString() +
-                "  hour(s)  |  " +
+                " hour(s)  |  " +
                 (24 / medicine.interval).floor().toString() +
                 " time(s) a day",
           ),
