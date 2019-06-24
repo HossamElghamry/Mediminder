@@ -1,16 +1,35 @@
-# medicine_reminder
+# Medicine Reminder
 
-A new Flutter project.
+An offline medicine reminder, built with Flutter, Provider and BLoC pattern.
 
-## Getting Started
+## Current Features
+[✓] Shared preference data storage
 
-This project is a starting point for a Flutter application.
+[✓] Homepage medicine list
 
-A few resources to get you started if this is your first Flutter project:
+[✓] Register a new reminder
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
+[✓] Interval picker
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+[✓] Optional medicine symbol choice
+
+[✓] Individual medicine detail page
+
+[✓] Beautiful UI
+
+
+## TODO List
+
+᛫ Notification implementation
+
+᛫ Registeration error checking
+
+᛫ Delete a reminder
+
+
+# Screenshots
+
+
+<img src="/Medicine_reminder_1.jpg" width="250"> <img src="/Medicine_reminder_3.jpg" width="250"> <img src="Medicine_reminder_4.jpg" width="250"><img src="Medicine_reminder_2.jpg" width="250">
+<img src="/Medicine_reminder_5.jpg" width="250">  
+
