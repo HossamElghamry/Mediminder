@@ -5,6 +5,7 @@ import 'package:medicine_reminder/src/models/medicine.dart';
 import 'package:medicine_reminder/src/models/medicine_type.dart';
 import 'package:medicine_reminder/src/ui/new_entry/new_entry_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NewEntry extends StatefulWidget {
   @override
@@ -20,6 +21,26 @@ class _NewEntryState extends State<NewEntry> {
     nameController.dispose();
     dosageController.dispose();
   }
+
+//   void initState() {
+//     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//         new FlutterLocalNotificationsPlugin();
+//     var android = new AndroidInitializationSettings('@mipmap/ic_launcher');
+//     var iOS = new IOSInitializationSettings();
+//     var initializationSettings = new InitializationSettings(android, iOS);
+//     flutterLocalNotificationsPlugin.initialize(initializationSettings,
+//         onSelectNotification: onSelectNotification);
+//   }
+
+//   Future onSelectNotification(String payload) async {
+//     if (payload != null) {
+//       debugPrint('notification payload: ' + payload);
+//     }
+//     await Navigator.push(
+//       context,
+//       new MaterialPageRoute(builder: (context) => new SecondScreen(payload)),
+//     );
+// }
 
   @override
   Widget build(BuildContext context) {

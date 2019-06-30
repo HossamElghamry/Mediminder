@@ -95,102 +95,133 @@ class TopContainer extends StatelessWidget {
             Divider(
               color: Color(0xFFB0F3CB),
             ),
-            StreamBuilder<Object>(
-              stream: globalBloc.selectedPeriod$,
+            Padding(
+              padding: EdgeInsets.only(top: 12.0),
+              child: Center(
+                child: Text(
+                  "Number of Reminders",
+                  style: TextStyle(
+                    fontFamily: "Neu",
+                    fontSize: 17,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            StreamBuilder<List<Medicine>>(
+              stream: globalBloc.medicineList$,
               builder: (context, snapshot) {
                 return Padding(
-                  padding: EdgeInsets.only(
-                    top: 30,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          globalBloc.updateSelectedPeriod(Period.Week);
-                        },
-                        child: Container(
-                          height: 30,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            color: snapshot.data == Period.Week
-                                ? Colors.white
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "This Week",
-                              style: TextStyle(
-                                color: snapshot.data == Period.Week
-                                    ? Color(0xFF3EB16F)
-                                    : Color(0xFFB0F3CB),
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ),
+                  padding: EdgeInsets.only(top: 16.0),
+                  child: Center(
+                    child: Text(
+                      !snapshot.hasData ? '0' : snapshot.data.length.toString(),
+                      style: TextStyle(
+                        fontFamily: "Neu",
+                        fontSize: 28,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.white,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          globalBloc.updateSelectedPeriod(Period.Month);
-                        },
-                        child: Container(
-                          height: 30,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            color: snapshot.data == Period.Month
-                                ? Colors.white
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "This Month",
-                              style: TextStyle(
-                                color: snapshot.data == Period.Month
-                                    ? Color(0xFF3EB16F)
-                                    : Color(0xFFB0F3CB),
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          globalBloc.updateSelectedPeriod(Period.Year);
-                        },
-                        child: Container(
-                          height: 30,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            color: snapshot.data == Period.Year
-                                ? Colors.white
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "This Year",
-                              style: TextStyle(
-                                color: snapshot.data == Period.Year
-                                    ? Color(0xFF3EB16F)
-                                    : Color(0xFFB0F3CB),
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 );
               },
-            )
+            ),
+            // StreamBuilder<Object>(
+            //   stream: globalBloc.selectedPeriod$,
+            //   builder: (context, snapshot) {
+            //     return Padding(
+            //       padding: EdgeInsets.only(
+            //         top: 30,
+            //       ),
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //         children: <Widget>[
+            //           GestureDetector(
+            //             onTap: () {
+            //               globalBloc.updateSelectedPeriod(Period.Week);
+            //             },
+            //             child: Container(
+            //               height: 30,
+            //               width: 100,
+            //               decoration: BoxDecoration(
+            //                 color: snapshot.data == Period.Week
+            //                     ? Colors.white
+            //                     : Colors.transparent,
+            //                 borderRadius: BorderRadius.circular(10),
+            //               ),
+            //               child: Center(
+            //                 child: Text(
+            //                   "This Week",
+            //                   style: TextStyle(
+            //                     color: snapshot.data == Period.Week
+            //                         ? Color(0xFF3EB16F)
+            //                         : Color(0xFFB0F3CB),
+            //                     fontSize: 15,
+            //                     fontWeight: FontWeight.w700,
+            //                   ),
+            //                 ),
+            //               ),
+            //             ),
+            //           ),
+            //           GestureDetector(
+            //             onTap: () {
+            //               globalBloc.updateSelectedPeriod(Period.Month);
+            //             },
+            //             child: Container(
+            //               height: 30,
+            //               width: 100,
+            //               decoration: BoxDecoration(
+            //                 color: snapshot.data == Period.Month
+            //                     ? Colors.white
+            //                     : Colors.transparent,
+            //                 borderRadius: BorderRadius.circular(10),
+            //               ),
+            //               child: Center(
+            //                 child: Text(
+            //                   "This Month",
+            //                   style: TextStyle(
+            //                     color: snapshot.data == Period.Month
+            //                         ? Color(0xFF3EB16F)
+            //                         : Color(0xFFB0F3CB),
+            //                     fontSize: 15,
+            //                     fontWeight: FontWeight.w700,
+            //                   ),
+            //                 ),
+            //               ),
+            //             ),
+            //           ),
+            //           GestureDetector(
+            //             onTap: () {
+            //               globalBloc.updateSelectedPeriod(Period.Year);
+            //             },
+            //             child: Container(
+            //               height: 30,
+            //               width: 100,
+            //               decoration: BoxDecoration(
+            //                 color: snapshot.data == Period.Year
+            //                     ? Colors.white
+            //                     : Colors.transparent,
+            //                 borderRadius: BorderRadius.circular(10),
+            //               ),
+            //               child: Center(
+            //                 child: Text(
+            //                   "This Year",
+            //                   style: TextStyle(
+            //                     color: snapshot.data == Period.Year
+            //                         ? Color(0xFF3EB16F)
+            //                         : Color(0xFFB0F3CB),
+            //                     fontSize: 15,
+            //                     fontWeight: FontWeight.w700,
+            //                   ),
+            //                 ),
+            //               ),
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     );
+            //   },
           ],
         ),
       ),
@@ -205,7 +236,9 @@ class BottomContainer extends StatelessWidget {
     return StreamBuilder<List<Medicine>>(
       stream: _globalBloc.medicineList$,
       builder: (context, snapshot) {
-        if (snapshot.data.length == 0) {
+        if (!snapshot.hasData) {
+          return Container();
+        } else if (snapshot.data.length == 0) {
           return Container(
             child: Center(
               child: Text(
@@ -244,36 +277,51 @@ class MedicineCard extends StatelessWidget {
     type = medicine.medicineType.substring(13);
   }
 
-  Icon makeIcon(double size) {
+  Hero makeIcon(double size) {
     if (type == "Bottle") {
-      return Icon(
-        IconData(0xe900, fontFamily: "Ic"),
-        color: Color(0xFF3EB16F),
-        size: size,
+      return Hero(
+        tag: type,
+        child: Icon(
+          IconData(0xe900, fontFamily: "Ic"),
+          color: Color(0xFF3EB16F),
+          size: size,
+        ),
       );
     } else if (type == "Pill") {
-      return Icon(
-        IconData(0xe901, fontFamily: "Ic"),
-        color: Color(0xFF3EB16F),
-        size: size,
+      return Hero(
+        tag: type,
+        child: Icon(
+          IconData(0xe901, fontFamily: "Ic"),
+          color: Color(0xFF3EB16F),
+          size: size,
+        ),
       );
     } else if (type == "Syringe") {
-      return Icon(
-        IconData(0xe902, fontFamily: "Ic"),
-        color: Color(0xFF3EB16F),
-        size: size,
+      return Hero(
+        tag: type,
+        child: Icon(
+          IconData(0xe902, fontFamily: "Ic"),
+          color: Color(0xFF3EB16F),
+          size: size,
+        ),
       );
     } else if (type == "Tablet") {
-      return Icon(
-        IconData(0xe903, fontFamily: "Ic"),
-        color: Color(0xFF3EB16F),
-        size: size,
+      return Hero(
+        tag: type,
+        child: Icon(
+          IconData(0xe903, fontFamily: "Ic"),
+          color: Color(0xFF3EB16F),
+          size: size,
+        ),
       );
     }
-    return Icon(
-      Icons.error,
-      color: Color(0xFF3EB16F),
-      size: 32,
+    return Hero(
+      tag: type,
+      child: Icon(
+        Icons.error,
+        color: Color(0xFF3EB16F),
+        size: 32,
+      ),
     );
   }
 
@@ -285,10 +333,20 @@ class MedicineCard extends StatelessWidget {
         highlightColor: Colors.white,
         splashColor: Colors.grey,
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MedicineDetails(medicine, type)),
+          Navigator.of(context).push(
+            PageRouteBuilder<Null>(
+              pageBuilder: (BuildContext context, Animation<double> animation,
+                  Animation<double> secondaryAnimation) {
+                return AnimatedBuilder(
+                    animation: animation,
+                    builder: (BuildContext context, Widget child) {
+                      return Opacity(
+                          opacity: animation.value,
+                          child: MedicineDetails(medicine, type));
+                    });
+              },
+              transitionDuration: Duration(milliseconds: 500),
+            ),
           );
         },
         child: Container(
@@ -301,12 +359,18 @@ class MedicineCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 makeIcon(50.0),
-                Text(
-                  medicine.medicineName,
-                  style: TextStyle(
-                      fontSize: 22,
-                      color: Color(0xFF3EB16F),
-                      fontWeight: FontWeight.w500),
+                Hero(
+                  tag: medicine.medicineName,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Text(
+                      medicine.medicineName,
+                      style: TextStyle(
+                          fontSize: 22,
+                          color: Color(0xFF3EB16F),
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
                 ),
                 Text(
                   medicine.interval == 1

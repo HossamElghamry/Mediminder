@@ -77,36 +77,51 @@ class MainSection extends StatelessWidget {
   MainSection({Key key, @required this.medicine, @required this.type})
       : super(key: key);
 
-  Icon makeIcon(double size) {
+  Hero makeIcon(double size) {
     if (type == "Bottle") {
-      return Icon(
-        IconData(0xe900, fontFamily: "Ic"),
-        color: Color(0xFF3EB16F),
-        size: size,
+      return Hero(
+        tag: type,
+        child: Icon(
+          IconData(0xe900, fontFamily: "Ic"),
+          color: Color(0xFF3EB16F),
+          size: size,
+        ),
       );
     } else if (type == "Pill") {
-      return Icon(
-        IconData(0xe901, fontFamily: "Ic"),
-        color: Color(0xFF3EB16F),
-        size: size,
+      return Hero(
+        tag: type,
+        child: Icon(
+          IconData(0xe901, fontFamily: "Ic"),
+          color: Color(0xFF3EB16F),
+          size: size,
+        ),
       );
     } else if (type == "Syringe") {
-      return Icon(
-        IconData(0xe902, fontFamily: "Ic"),
-        color: Color(0xFF3EB16F),
-        size: size,
+      return Hero(
+        tag: type,
+        child: Icon(
+          IconData(0xe902, fontFamily: "Ic"),
+          color: Color(0xFF3EB16F),
+          size: size,
+        ),
       );
     } else if (type == "Tablet") {
-      return Icon(
-        IconData(0xe903, fontFamily: "Ic"),
-        color: Color(0xFF3EB16F),
-        size: size,
+      return Hero(
+        tag: type,
+        child: Icon(
+          IconData(0xe903, fontFamily: "Ic"),
+          color: Color(0xFF3EB16F),
+          size: size,
+        ),
       );
     }
-    return Icon(
-      Icons.error,
-      color: Color(0xFF3EB16F),
-      size: size,
+    return Hero(
+      tag: type,
+      child: Icon(
+        Icons.error,
+        color: Color(0xFF3EB16F),
+        size: 32,
+      ),
     );
   }
 
@@ -121,9 +136,15 @@ class MainSection extends StatelessWidget {
           ),
           Column(
             children: <Widget>[
-              MainInfoTab(
-                fieldTitle: "Medicine Name",
-                fieldInfo: medicine.medicineName,
+              Hero(
+                tag: medicine.medicineName,
+                child: Material(
+                  color: Colors.transparent,
+                  child: MainInfoTab(
+                    fieldTitle: "Medicine Name",
+                    fieldInfo: medicine.medicineName,
+                  ),
+                ),
               ),
               MainInfoTab(
                 fieldTitle: "Dosage",
