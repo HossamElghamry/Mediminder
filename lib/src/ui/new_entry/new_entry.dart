@@ -3,9 +3,12 @@ import 'package:medicine_reminder/src/common/convert_time.dart';
 import 'package:medicine_reminder/src/global_bloc.dart';
 import 'package:medicine_reminder/src/models/medicine.dart';
 import 'package:medicine_reminder/src/models/medicine_type.dart';
+import 'package:medicine_reminder/src/ui/homepage/homepage.dart';
 import 'package:medicine_reminder/src/ui/new_entry/new_entry_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 class NewEntry extends StatefulWidget {
   @override
@@ -22,25 +25,57 @@ class _NewEntryState extends State<NewEntry> {
     dosageController.dispose();
   }
 
-//   void initState() {
-//     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-//         new FlutterLocalNotificationsPlugin();
-//     var android = new AndroidInitializationSettings('@mipmap/ic_launcher');
-//     var iOS = new IOSInitializationSettings();
-//     var initializationSettings = new InitializationSettings(android, iOS);
-//     flutterLocalNotificationsPlugin.initialize(initializationSettings,
-//         onSelectNotification: onSelectNotification);
-//   }
+  void initState() {
+    super.initState();
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+  }
 
-//   Future onSelectNotification(String payload) async {
-//     if (payload != null) {
-//       debugPrint('notification payload: ' + payload);
-//     }
-//     await Navigator.push(
-//       context,
-//       new MaterialPageRoute(builder: (context) => new SecondScreen(payload)),
-//     );
-// }
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: ' + payload);
+    }
+    await Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (context) => HomePage()),
+    );
+  }
+
+  Future<void> scheduleNotification(Medicine medicine) async {
+    var hour = int.parse(medicine.startTime[0] + medicine.startTime[1]);
+    var ogValue = hour;
+    var minute = int.parse(medicine.startTime[2] + medicine.startTime[3]);
+
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'repeatDailyAtTime channel id',
+        'repeatDailyAtTime channel name',
+        'repeatDailyAtTime description',
+        importance: Importance.Max,
+        priority: Priority.High);
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    for (int i = 0; i < (24 / medicine.interval).floor(); i++) {
+      if ((hour + (medicine.interval * i) > 24)) {
+        hour = hour + (medicine.interval * i) - 24;
+      } else {
+        hour = hour + (medicine.interval * i);
+      }
+      await flutterLocalNotificationsPlugin.showDailyAtTime(
+          medicine.dosage + medicine.interval + i,
+          'Medicine Reminder: ${medicine.medicineName}',
+          'It is time to take your ${medicine.medicineName + " " + medicine.medicineType.substring(13)}, according to schedule',
+          Time(hour, minute, 0),
+          platformChannelSpecifics);
+      hour = ogValue;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,6 +217,7 @@ class _NewEntryState extends State<NewEntry> {
                       startTime: _newEntryBloc.selectedTimeOfDay$.value,
                     );
                     _globalBloc.updateMedicineList(newEntryMedicine);
+                    scheduleNotification(newEntryMedicine);
                     Navigator.of(context).pop();
                   },
                   child: Center(
@@ -211,32 +247,33 @@ class IntervalSelection extends StatefulWidget {
 
 class _IntervalSelectionState extends State<IntervalSelection> {
   var _intervals = [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    21,
-    22,
-    23,
-    24
+    // 1,
+    // 2,
+    // 3,
+    // 4,
+    // 5,
+    // 6,
+    // 7,
+    // 8,
+    // 9,
+    // 10,
+    // 11,
+    // 12,
+    // 13,
+    // 14,
+    // 15,
+    // 16,
+    // 17,
+    // 18,
+    // 19,
+    // 20,
+    // 21,
+    // 22,
+    // 23,
+    // 24,
+    6, 8, 12, 24,
   ];
-  var _selected = 1;
+  var _selected = 6;
 
   @override
   Widget build(BuildContext context) {
@@ -429,109 +466,6 @@ class MedicineTypeColumn extends StatelessWidget {
     );
   }
 }
-
-// class ScheduleCheckBoxes extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
-//     return StreamBuilder<List<Day>>(
-//         stream: _newEntryBloc.checkedDays$,
-//         builder: (context, snapshot) {
-//           if (!snapshot.hasData) {
-//             return CircularProgressIndicator();
-//           } else {
-//             return Padding(
-//               padding: EdgeInsets.only(top: 12.0),
-//               child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                   children: <Widget>[
-//                     BuildDay(
-//                       text: "Sat",
-//                       day: Day.Saturday,
-//                       isSelected:
-//                           snapshot.data.contains(Day.Saturday) ? true : false,
-//                     ),
-//                     BuildDay(
-//                       text: "Sun",
-//                       day: Day.Sunday,
-//                       isSelected:
-//                           snapshot.data.contains(Day.Sunday) ? true : false,
-//                     ),
-//                     BuildDay(
-//                       text: "Mon",
-//                       day: Day.Monday,
-//                       isSelected:
-//                           snapshot.data.contains(Day.Monday) ? true : false,
-//                     ),
-//                     BuildDay(
-//                       text: "Tue",
-//                       day: Day.Tuesday,
-//                       isSelected:
-//                           snapshot.data.contains(Day.Tuesday) ? true : false,
-//                     ),
-//                     BuildDay(
-//                       text: "Wed",
-//                       day: Day.Wednesday,
-//                       isSelected:
-//                           snapshot.data.contains(Day.Wednesday) ? true : false,
-//                     ),
-//                     BuildDay(
-//                       text: "Thu",
-//                       day: Day.Thursday,
-//                       isSelected:
-//                           snapshot.data.contains(Day.Thursday) ? true : false,
-//                     ),
-//                     BuildDay(
-//                       text: "Fri",
-//                       day: Day.Friday,
-//                       isSelected:
-//                           snapshot.data.contains(Day.Friday) ? true : false,
-//                     ),
-//                   ]),
-//             );
-//           }
-//         });
-//   }
-// }
-
-// class BuildDay extends StatelessWidget {
-//   final String text;
-//   final Day day;
-//   final bool isSelected;
-
-//   BuildDay(
-//       {Key key,
-//       @required this.text,
-//       @required this.day,
-//       @required this.isSelected})
-//       : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
-//     return Column(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: <Widget>[
-//         Text(
-//           text,
-//           style: TextStyle(
-//             color: Color(0xFF3EB16F),
-//             fontSize: 14,
-//             fontWeight: FontWeight.w700,
-//           ),
-//         ),
-//         Checkbox(
-//           value: isSelected,
-//           activeColor: Color(0xFF3EB16F),
-//           onChanged: (value) {
-//             _newEntryBloc.addtoDays(day);
-//           },
-//         ),
-//       ],
-//     );
-//     ;
-//   }
-// }
 
 class PanelTitle extends StatelessWidget {
   final String title;

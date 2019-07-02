@@ -280,7 +280,7 @@ class MedicineCard extends StatelessWidget {
   Hero makeIcon(double size) {
     if (type == "Bottle") {
       return Hero(
-        tag: type,
+        tag: medicine.medicineName + type,
         child: Icon(
           IconData(0xe900, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -289,7 +289,7 @@ class MedicineCard extends StatelessWidget {
       );
     } else if (type == "Pill") {
       return Hero(
-        tag: type,
+        tag: medicine.medicineName + type,
         child: Icon(
           IconData(0xe901, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -298,7 +298,7 @@ class MedicineCard extends StatelessWidget {
       );
     } else if (type == "Syringe") {
       return Hero(
-        tag: type,
+        tag: medicine.medicineName + type,
         child: Icon(
           IconData(0xe902, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -307,7 +307,7 @@ class MedicineCard extends StatelessWidget {
       );
     } else if (type == "Tablet") {
       return Hero(
-        tag: type,
+        tag: medicine.medicineName + type,
         child: Icon(
           IconData(0xe903, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -316,7 +316,7 @@ class MedicineCard extends StatelessWidget {
       );
     }
     return Hero(
-      tag: type,
+      tag: medicine.medicineName + type,
       child: Icon(
         Icons.error,
         color: Color(0xFF3EB16F),

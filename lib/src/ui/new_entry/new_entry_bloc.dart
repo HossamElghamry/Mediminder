@@ -1,4 +1,3 @@
-import 'package:medicine_reminder/src/models/day.dart';
 import 'package:medicine_reminder/src/models/medicine_type.dart';
 import 'package:rxdart/rxdart.dart';
 

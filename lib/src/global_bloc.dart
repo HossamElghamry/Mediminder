@@ -16,10 +16,10 @@ class GlobalBloc {
   BehaviorSubject<List<Medicine>> get medicineList$ => _medicineList$;
 
   GlobalBloc() {
+    _medicineList$ = BehaviorSubject<List<Medicine>>.seeded([]);
     makeMedicineList();
     // _selectedDay$ = BehaviorSubject<Day>.seeded(Day.Saturday);
     _selectedPeriod$ = BehaviorSubject<Period>.seeded(Period.Week);
-    _medicineList$ = BehaviorSubject<List<Medicine>>.seeded([]);
   }
 
   // void updateSelectedDay(Day day) {

@@ -1,5 +1,3 @@
-import 'package:medicine_reminder/src/models/medicine_type.dart';
-
 class Medicine {
   final String medicineName;
   final int dosage;
