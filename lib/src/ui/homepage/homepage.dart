@@ -271,43 +271,40 @@ class BottomContainer extends StatelessWidget {
 
 class MedicineCard extends StatelessWidget {
   final Medicine medicine;
-  String type;
 
-  MedicineCard(this.medicine) {
-    type = medicine.medicineType.substring(13);
-  }
+  MedicineCard(this.medicine);
 
   Hero makeIcon(double size) {
-    if (type == "Bottle") {
+    if (medicine.medicineType == "Bottle") {
       return Hero(
-        tag: medicine.medicineName + type,
+        tag: medicine.medicineName + medicine.medicineType,
         child: Icon(
           IconData(0xe900, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
           size: size,
         ),
       );
-    } else if (type == "Pill") {
+    } else if (medicine.medicineType == "Pill") {
       return Hero(
-        tag: medicine.medicineName + type,
+        tag: medicine.medicineName + medicine.medicineType,
         child: Icon(
           IconData(0xe901, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
           size: size,
         ),
       );
-    } else if (type == "Syringe") {
+    } else if (medicine.medicineType == "Syringe") {
       return Hero(
-        tag: medicine.medicineName + type,
+        tag: medicine.medicineName + medicine.medicineType,
         child: Icon(
           IconData(0xe902, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
           size: size,
         ),
       );
-    } else if (type == "Tablet") {
+    } else if (medicine.medicineType == "Tablet") {
       return Hero(
-        tag: medicine.medicineName + type,
+        tag: medicine.medicineName + medicine.medicineType,
         child: Icon(
           IconData(0xe903, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -316,11 +313,11 @@ class MedicineCard extends StatelessWidget {
       );
     }
     return Hero(
-      tag: medicine.medicineName + type,
+      tag: medicine.medicineName + medicine.medicineType,
       child: Icon(
         Icons.error,
         color: Color(0xFF3EB16F),
-        size: 32,
+        size: size,
       ),
     );
   }
@@ -341,8 +338,9 @@ class MedicineCard extends StatelessWidget {
                     animation: animation,
                     builder: (BuildContext context, Widget child) {
                       return Opacity(
-                          opacity: animation.value,
-                          child: MedicineDetails(medicine, type));
+                        opacity: animation.value,
+                        child: MedicineDetails(medicine),
+                      );
                     });
               },
               transitionDuration: Duration(milliseconds: 500),

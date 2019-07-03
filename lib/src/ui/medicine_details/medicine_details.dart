@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:medicine_reminder/src/models/medicine.dart';
+import 'package:provider/provider.dart';
+
+import '../../global_bloc.dart';
 
 class MedicineDetails extends StatelessWidget {
   final Medicine medicine;
-  final String type;
 
-  MedicineDetails(this.medicine, this.type);
-
-  void deleteMedicine() {}
+  MedicineDetails(this.medicine);
 
   @override
   Widget build(BuildContext context) {
+    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
@@ -35,7 +36,7 @@ class MedicineDetails extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              MainSection(medicine: medicine, type: type),
+              MainSection(medicine: medicine),
               SizedBox(
                 height: 15,
               ),
@@ -53,7 +54,8 @@ class MedicineDetails extends StatelessWidget {
                         color: Color(0xFF3EB16F),
                         shape: StadiumBorder(),
                         onPressed: () {
-                          deleteMedicine();
+                          _globalBloc.removeMedicine(medicine);
+                          Navigator.of(context).pop();
                         },
                         child: Center(
                           child: Text(
@@ -76,42 +78,43 @@ class MedicineDetails extends StatelessWidget {
 
 class MainSection extends StatelessWidget {
   final Medicine medicine;
-  final String type;
 
-  MainSection({Key key, @required this.medicine, @required this.type})
-      : super(key: key);
+  MainSection({
+    Key key,
+    @required this.medicine,
+  }) : super(key: key);
 
   Hero makeIcon(double size) {
-    if (type == "Bottle") {
+    if (medicine.medicineType == "Bottle") {
       return Hero(
-        tag: medicine.medicineName + type,
+        tag: medicine.medicineName + medicine.medicineType,
         child: Icon(
           IconData(0xe900, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
           size: size,
         ),
       );
-    } else if (type == "Pill") {
+    } else if (medicine.medicineType == "Pill") {
       return Hero(
-        tag: medicine.medicineName + type,
+        tag: medicine.medicineName + medicine.medicineType,
         child: Icon(
           IconData(0xe901, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
           size: size,
         ),
       );
-    } else if (type == "Syringe") {
+    } else if (medicine.medicineType == "Syringe") {
       return Hero(
-        tag: medicine.medicineName + type,
+        tag: medicine.medicineName + medicine.medicineType,
         child: Icon(
           IconData(0xe902, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
           size: size,
         ),
       );
-    } else if (type == "Tablet") {
+    } else if (medicine.medicineType == "Tablet") {
       return Hero(
-        tag: medicine.medicineName + type,
+        tag: medicine.medicineName + medicine.medicineType,
         child: Icon(
           IconData(0xe903, fontFamily: "Ic"),
           color: Color(0xFF3EB16F),
@@ -120,11 +123,11 @@ class MainSection extends StatelessWidget {
       );
     }
     return Hero(
-      tag: medicine.medicineName + type,
+      tag: medicine.medicineName + medicine.medicineType,
       child: Icon(
         Icons.error,
         color: Color(0xFF3EB16F),
-        size: 32,
+        size: size,
       ),
     );
   }
@@ -211,7 +214,7 @@ class ExtendedSection extends StatelessWidget {
         children: <Widget>[
           ExtendedInfoTab(
             fieldTitle: "Medicine Type",
-            fieldInfo: medicine.medicineType.substring(13),
+            fieldInfo: medicine.medicineType,
           ),
           ExtendedInfoTab(
             fieldTitle: "Dose",

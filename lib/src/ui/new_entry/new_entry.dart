@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:medicine_reminder/src/common/convert_time.dart';
 import 'package:medicine_reminder/src/global_bloc.dart';
@@ -23,6 +25,15 @@ class _NewEntryState extends State<NewEntry> {
     super.dispose();
     nameController.dispose();
     dosageController.dispose();
+  }
+
+  List<int> makeIDs(double n) {
+    var rng = Random();
+    List<int> ids = [];
+    for (int i = 0; i < n; i++) {
+      ids.add(rng.nextInt(1000000000));
+    }
+    return ids;
   }
 
   initializeNotifications() async {
@@ -66,15 +77,15 @@ class _NewEntryState extends State<NewEntry> {
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
     for (int i = 0; i < (24 / medicine.interval).floor(); i++) {
-      if ((hour + (medicine.interval * i) > 24)) {
+      if ((hour + (medicine.interval * i) > 23)) {
         hour = hour + (medicine.interval * i) - 24;
       } else {
         hour = hour + (medicine.interval * i);
       }
       await flutterLocalNotificationsPlugin.showDailyAtTime(
-          medicine.dosage + medicine.interval + i,
+          int.parse(medicine.notificationIDs[i]),
           'Medicine Reminder: ${medicine.medicineName}',
-          'It is time to take your ${medicine.medicineName + " " + medicine.medicineType.substring(13)}, according to schedule',
+          'It is time to take your ${medicine.medicineName + " " + medicine.medicineType}, according to schedule',
           Time(hour, minute, 0),
           platformChannelSpecifics);
       hour = ogValue;
@@ -212,14 +223,26 @@ class _NewEntryState extends State<NewEntry> {
                 child: FlatButton(
                   color: Color(0xFF3EB16F),
                   shape: StadiumBorder(),
-                  onPressed: () async {
+                  onPressed: () {
+                    var medicineName = nameController.value.text;
+                    var dosage = int.parse(dosageController.value.text);
+                    var medicineType = _newEntryBloc.selectedMedicineType.value
+                        .toString()
+                        .substring(13);
+                    var interval = _newEntryBloc.selectedInterval$.value;
+                    var startTime = _newEntryBloc.selectedTimeOfDay$.value;
+                    var intIDs =
+                        makeIDs(24 / _newEntryBloc.selectedInterval$.value);
+                    List<String> notificationIDs =
+                        intIDs.map((i) => i.toString()).toList();
+
                     Medicine newEntryMedicine = Medicine(
-                      medicineName: nameController.value.text,
-                      dosage: int.parse(dosageController.value.text),
-                      medicineType:
-                          _newEntryBloc.selectedMedicineType.value.toString(),
-                      interval: _newEntryBloc.selectedInterval$.value,
-                      startTime: _newEntryBloc.selectedTimeOfDay$.value,
+                      notificationIDs: notificationIDs,
+                      medicineName: medicineName,
+                      dosage: dosage,
+                      medicineType: medicineType,
+                      interval: interval,
+                      startTime: startTime,
                     );
                     _globalBloc.updateMedicineList(newEntryMedicine);
                     scheduleNotification(newEntryMedicine);
@@ -252,31 +275,10 @@ class IntervalSelection extends StatefulWidget {
 
 class _IntervalSelectionState extends State<IntervalSelection> {
   var _intervals = [
-    // 1,
-    // 2,
-    // 3,
-    // 4,
-    // 5,
-    // 6,
-    // 7,
-    // 8,
-    // 9,
-    // 10,
-    // 11,
-    // 12,
-    // 13,
-    // 14,
-    // 15,
-    // 16,
-    // 17,
-    // 18,
-    // 19,
-    // 20,
-    // 21,
-    // 22,
-    // 23,
-    // 24,
-    6, 8, 12, 24,
+    6,
+    8,
+    12,
+    24,
   ];
   var _selected = 6;
 
