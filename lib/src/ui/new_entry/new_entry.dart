@@ -8,8 +8,6 @@ import 'package:medicine_reminder/src/ui/new_entry/new_entry_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
 class NewEntry extends StatefulWidget {
   @override
   _NewEntryState createState() => _NewEntryState();
@@ -18,6 +16,8 @@ class NewEntry extends StatefulWidget {
 class _NewEntryState extends State<NewEntry> {
   TextEditingController nameController = TextEditingController();
   TextEditingController dosageController = TextEditingController();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   void dispose() {
     super.dispose();
@@ -25,16 +25,19 @@ class _NewEntryState extends State<NewEntry> {
     dosageController.dispose();
   }
 
-  void initState() {
-    super.initState();
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  initializeNotifications() async {
     var initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettingsIOS = IOSInitializationSettings();
     var initializationSettings = InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
+  }
+
+  void initState() {
+    super.initState();
+    initializeNotifications();
   }
 
   Future onSelectNotification(String payload) async {
@@ -61,6 +64,7 @@ class _NewEntryState extends State<NewEntry> {
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+
     for (int i = 0; i < (24 / medicine.interval).floor(); i++) {
       if ((hour + (medicine.interval * i) > 24)) {
         hour = hour + (medicine.interval * i) - 24;
@@ -75,6 +79,7 @@ class _NewEntryState extends State<NewEntry> {
           platformChannelSpecifics);
       hour = ogValue;
     }
+    //await flutterLocalNotificationsPlugin.cancelAll();
   }
 
   @override

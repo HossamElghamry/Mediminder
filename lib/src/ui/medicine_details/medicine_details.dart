@@ -7,6 +7,8 @@ class MedicineDetails extends StatelessWidget {
 
   MedicineDetails(this.medicine, this.type);
 
+  void deleteMedicine() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +52,9 @@ class MedicineDetails extends StatelessWidget {
                       child: FlatButton(
                         color: Color(0xFF3EB16F),
                         shape: StadiumBorder(),
-                        onPressed: () {},
+                        onPressed: () {
+                          deleteMedicine();
+                        },
                         child: Center(
                           child: Text(
                             "DELETE MEDICINE",
