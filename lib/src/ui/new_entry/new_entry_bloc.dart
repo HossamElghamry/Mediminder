@@ -1,3 +1,5 @@
+import 'package:medicine_reminder/src/models/errors.dart';
+import 'package:medicine_reminder/src/models/medicine.dart';
 import 'package:medicine_reminder/src/models/medicine_type.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -15,12 +17,16 @@ class NewEntryBloc {
   BehaviorSubject<String> _selectedTimeOfDay$;
   BehaviorSubject<String> get selectedTimeOfDay$ => _selectedTimeOfDay$;
 
+  BehaviorSubject<EntryError> _errorState$;
+  BehaviorSubject<EntryError> get errorState$ => _errorState$;
+
   NewEntryBloc() {
     _selectedMedicineType$ =
         BehaviorSubject<MedicineType>.seeded(MedicineType.None);
     // _checkedDays$ = BehaviorSubject<List<Day>>.seeded([]);
-    _selectedTimeOfDay$ = BehaviorSubject<String>.seeded("0000");
-    _selectedInterval$ = BehaviorSubject<int>.seeded(1);
+    _selectedTimeOfDay$ = BehaviorSubject<String>.seeded("None");
+    _selectedInterval$ = BehaviorSubject<int>.seeded(0);
+    _errorState$ = BehaviorSubject<EntryError>.seeded(EntryError.None);
   }
 
   void dispose() {
@@ -28,6 +34,28 @@ class NewEntryBloc {
     // _checkedDays$.close();
     _selectedTimeOfDay$.close();
     _selectedInterval$.close();
+  }
+
+  void submitError(EntryError error) {
+    _errorState$.add(error);
+  }
+
+  void errorCheck(String medicineName, List<Medicine> medicineList) {
+    for (var medicine in medicineList) {
+      if (medicineName == medicine.medicineName) {
+        _errorState$.add(EntryError.NameDuplicate);
+        return;
+      }
+    }
+    if (_selectedInterval$.value == 0) {
+      _errorState$.add(EntryError.Interval);
+      return;
+    }
+    if (_selectedTimeOfDay$.value == "None") {
+      _errorState$.add(EntryError.StartTime);
+      return;
+    }
+    _errorState$.add(EntryError.None);
   }
 
   void updateInterval(int interval) {

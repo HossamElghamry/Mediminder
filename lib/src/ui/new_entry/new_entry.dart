@@ -1,8 +1,8 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:medicine_reminder/src/common/convert_time.dart';
 import 'package:medicine_reminder/src/global_bloc.dart';
+import 'package:medicine_reminder/src/models/errors.dart';
 import 'package:medicine_reminder/src/models/medicine.dart';
 import 'package:medicine_reminder/src/models/medicine_type.dart';
 import 'package:medicine_reminder/src/ui/homepage/homepage.dart';
@@ -27,6 +27,19 @@ class _NewEntryState extends State<NewEntry> {
     dosageController.dispose();
   }
 
+  void initState() {
+    super.initState();
+    initializeNotifications();
+  }
+
+  void errorCheck(
+    medicineName,
+    dosage,
+    medicineType,
+    interval,
+    startTime,
+  ) {}
+
   List<int> makeIDs(double n) {
     var rng = Random();
     List<int> ids = [];
@@ -44,11 +57,6 @@ class _NewEntryState extends State<NewEntry> {
         initializationSettingsAndroid, initializationSettingsIOS);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
-  }
-
-  void initState() {
-    super.initState();
-    initializeNotifications();
   }
 
   Future onSelectNotification(String payload) async {
@@ -117,50 +125,50 @@ class _NewEntryState extends State<NewEntry> {
         elevation: 0.0,
       ),
       body: Container(
-          child: Provider<NewEntryBloc>.value(
-        value: _newEntryBloc,
-        child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-          children: <Widget>[
-            PanelTitle(
-              title: "Medicine Name",
-              isRequired: true,
-            ),
-            TextFormField(
-              style: TextStyle(
-                fontSize: 16,
+        child: Provider<NewEntryBloc>.value(
+          value: _newEntryBloc,
+          child: ListView(
+            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            children: <Widget>[
+              PanelTitle(
+                title: "Medicine Name",
+                isRequired: true,
               ),
-              controller: nameController,
-              textCapitalization: TextCapitalization.words,
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(),
+              TextFormField(
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+                controller: nameController,
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(
+                  border: UnderlineInputBorder(),
+                ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            PanelTitle(
-              title: "Dosage in mg",
-              isRequired: true,
-            ),
-            TextFormField(
-              controller: dosageController,
-              keyboardType: TextInputType.number,
-              style: TextStyle(
-                fontSize: 16,
+              SizedBox(
+                height: 10,
               ),
-              textCapitalization: TextCapitalization.words,
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(),
+              PanelTitle(
+                title: "Dosage in mg",
+                isRequired: true,
               ),
-            ),
-            PanelTitle(
-              title: "Medicine Type",
-              isRequired: false,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 10.0),
-              child: StreamBuilder<MedicineType>(
+              TextFormField(
+                controller: dosageController,
+                keyboardType: TextInputType.number,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(
+                  border: UnderlineInputBorder(),
+                ),
+              ),
+              PanelTitle(
+                title: "Medicine Type",
+                isRequired: false,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10.0),
+                child: StreamBuilder<MedicineType>(
                   stream: _newEntryBloc.selectedMedicineType,
                   builder: (context, snapshot) {
                     return Row(
@@ -196,74 +204,94 @@ class _NewEntryState extends State<NewEntry> {
                                 : false),
                       ],
                     );
-                  }),
-            ),
-            PanelTitle(
-              title: "Interval Selection",
-              isRequired: true,
-            ),
-            //ScheduleCheckBoxes(),
-            IntervalSelection(),
-            PanelTitle(
-              title: "Starting Time",
-              isRequired: true,
-            ),
-            SelectTime(),
-            SizedBox(
-              height: 35,
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.height * 0.08,
-                right: MediaQuery.of(context).size.height * 0.08,
-              ),
-              child: Container(
-                width: 220,
-                height: 70,
-                child: FlatButton(
-                  color: Color(0xFF3EB16F),
-                  shape: StadiumBorder(),
-                  onPressed: () {
-                    var medicineName = nameController.value.text;
-                    var dosage = int.parse(dosageController.value.text);
-                    var medicineType = _newEntryBloc.selectedMedicineType.value
-                        .toString()
-                        .substring(13);
-                    var interval = _newEntryBloc.selectedInterval$.value;
-                    var startTime = _newEntryBloc.selectedTimeOfDay$.value;
-                    var intIDs =
-                        makeIDs(24 / _newEntryBloc.selectedInterval$.value);
-                    List<String> notificationIDs =
-                        intIDs.map((i) => i.toString()).toList();
-
-                    Medicine newEntryMedicine = Medicine(
-                      notificationIDs: notificationIDs,
-                      medicineName: medicineName,
-                      dosage: dosage,
-                      medicineType: medicineType,
-                      interval: interval,
-                      startTime: startTime,
-                    );
-                    _globalBloc.updateMedicineList(newEntryMedicine);
-                    scheduleNotification(newEntryMedicine);
-                    Navigator.of(context).pop();
                   },
-                  child: Center(
-                    child: Text(
-                      "CONFIRM",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
+                ),
+              ),
+              PanelTitle(
+                title: "Interval Selection",
+                isRequired: true,
+              ),
+              //ScheduleCheckBoxes(),
+              IntervalSelection(),
+              PanelTitle(
+                title: "Starting Time",
+                isRequired: true,
+              ),
+              SelectTime(),
+              SizedBox(
+                height: 35,
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.height * 0.08,
+                  right: MediaQuery.of(context).size.height * 0.08,
+                ),
+                child: Container(
+                  width: 220,
+                  height: 70,
+                  child: FlatButton(
+                    color: Color(0xFF3EB16F),
+                    shape: StadiumBorder(),
+                    onPressed: () {
+                      String medicineName;
+                      int dosage;
+                      if (nameController.value.text == null) {
+                        _newEntryBloc.submitError(EntryError.NameNull);
+                      } else {
+                        medicineName = nameController.value.text;
+                      }
+                      if (dosageController.value.text == null) {
+                        _newEntryBloc.submitError(EntryError.Dosage);
+                      } else {
+                        dosage = int.parse(dosageController.value.text);
+                      }
+
+                      _newEntryBloc.errorCheck(
+                        medicineName,
+                        _globalBloc.medicineList$.value,
+                      );
+
+                      String medicineType = _newEntryBloc
+                          .selectedMedicineType.value
+                          .toString()
+                          .substring(13);
+                      int interval = _newEntryBloc.selectedInterval$.value;
+                      String startTime = _newEntryBloc.selectedTimeOfDay$.value;
+
+                      List<int> intIDs =
+                          makeIDs(24 / _newEntryBloc.selectedInterval$.value);
+                      List<String> notificationIDs =
+                          intIDs.map((i) => i.toString()).toList();
+
+                      Medicine newEntryMedicine = Medicine(
+                        notificationIDs: notificationIDs,
+                        medicineName: medicineName,
+                        dosage: dosage,
+                        medicineType: medicineType,
+                        interval: interval,
+                        startTime: startTime,
+                      );
+                      _globalBloc.updateMedicineList(newEntryMedicine);
+                      scheduleNotification(newEntryMedicine);
+                      Navigator.of(context).pop();
+                    },
+                    child: Center(
+                      child: Text(
+                        "CONFIRM",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }
