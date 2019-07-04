@@ -65,19 +65,14 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Neu
-      fonts:
-        - asset: assets/fonts/neu/Neu.ttf
-        - asset: assets/fonts/neu/Neu_Bold.ttf
-          weight: 700
-        - asset: assets/fonts/neu/Neu_Medium.ttf
-          weight: 600
-        - asset: assets/fonts/neu/Neu_Light.ttf
-          weight: 300
     - family: Ic
       fonts:
         - asset: assets/fonts/ic/ic_medicine.ttf
-
+    - family: Angel
+      fonts:
+        - asset: assets/fonts/neu/Angel Signature.ttf    
+        
+        
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

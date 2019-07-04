@@ -22,7 +22,7 @@ class MedicineDetails extends StatelessWidget {
         ),
         centerTitle: true,
         title: Text(
-          "Medicine Details",
+          "Mediminder Details",
           style: TextStyle(
             color: Colors.black,
             fontSize: 18,
@@ -59,7 +59,7 @@ class MedicineDetails extends StatelessWidget {
                         },
                         child: Center(
                           child: Text(
-                            "Delete Reminder",
+                            "Delete Mediminder",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 22,
@@ -219,7 +219,7 @@ class ExtendedSection extends StatelessWidget {
                 : medicine.medicineType,
           ),
           ExtendedInfoTab(
-            fieldTitle: "Dose",
+            fieldTitle: "Dose Interval",
             fieldInfo: "Every " +
                 medicine.interval.toString() +
                 " hour(s)  |  " +

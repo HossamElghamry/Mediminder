@@ -31,6 +31,9 @@ class _HomePageState extends State<HomePage> {
               flex: 3,
               child: TopContainer(),
             ),
+            SizedBox(
+              height: 10,
+            ),
             Flexible(
               flex: 7,
               child: Provider<GlobalBloc>.value(
@@ -38,21 +41,11 @@ class _HomePageState extends State<HomePage> {
                 value: _globalBloc,
               ),
             ),
-            // StreamBuilder<Object>(
-            //     stream: _globalBloc.selectedPeriod$,
-            //     builder: (context, snapshot) {
-            //       return AnimatedContainer(
-            //           duration: Duration(milliseconds: 500),
-            //           height: snapshot.data == Period.Week ? 60 : 0,
-            //           child: snapshot.data == Period.Week
-            //               ? MiddleContainer()
-            //               : Container());
-            //     }),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        elevation: 15,
+        elevation: 4,
         backgroundColor: Color(0xFF3EB16F),
         child: Icon(
           Icons.add,
@@ -80,159 +73,66 @@ class TopContainer extends StatelessWidget {
           bottomLeft: Radius.elliptical(50, 27),
           bottomRight: Radius.elliptical(50, 27),
         ),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 5,
+            color: Colors.grey[400],
+            offset: Offset(0, 3.5),
+          )
+        ],
         color: Color(0xFF3EB16F),
       ),
       width: double.infinity,
-      child: Container(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(
-                bottom: 40,
-                top: 15,
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(
+              bottom: 10,
+            ),
+            child: Text(
+              "Mediminder",
+              style: TextStyle(
+                fontFamily: "Angel",
+                fontSize: 64,
+                color: Colors.white,
               ),
+            ),
+          ),
+          Divider(
+            color: Color(0xFFB0F3CB),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 12.0),
+            child: Center(
               child: Text(
-                "Medicine Reminder",
+                "Number of Mediminders",
                 style: TextStyle(
-                  fontFamily: "Neu",
-                  fontSize: 31,
-                  fontWeight: FontWeight.w300,
+                  fontSize: 17,
                   color: Colors.white,
                 ),
               ),
             ),
-            Divider(
-              color: Color(0xFFB0F3CB),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 12.0),
-              child: Center(
-                child: Text(
-                  "Number of Reminders",
-                  style: TextStyle(
-                    fontFamily: "Neu",
-                    fontSize: 17,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            StreamBuilder<List<Medicine>>(
-              stream: globalBloc.medicineList$,
-              builder: (context, snapshot) {
-                return Padding(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: Center(
-                    child: Text(
-                      !snapshot.hasData ? '0' : snapshot.data.length.toString(),
-                      style: TextStyle(
-                        fontFamily: "Neu",
-                        fontSize: 28,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.white,
-                      ),
+          ),
+          StreamBuilder<List<Medicine>>(
+            stream: globalBloc.medicineList$,
+            builder: (context, snapshot) {
+              return Padding(
+                padding: EdgeInsets.only(top: 16.0),
+                child: Center(
+                  child: Text(
+                    !snapshot.hasData ? '0' : snapshot.data.length.toString(),
+                    style: TextStyle(
+                      fontFamily: "Neu",
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
-                );
-              },
-            ),
-            // StreamBuilder<Object>(
-            //   stream: globalBloc.selectedPeriod$,
-            //   builder: (context, snapshot) {
-            //     return Padding(
-            //       padding: EdgeInsets.only(
-            //         top: 30,
-            //       ),
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //         children: <Widget>[
-            //           GestureDetector(
-            //             onTap: () {
-            //               globalBloc.updateSelectedPeriod(Period.Week);
-            //             },
-            //             child: Container(
-            //               height: 30,
-            //               width: 100,
-            //               decoration: BoxDecoration(
-            //                 color: snapshot.data == Period.Week
-            //                     ? Colors.white
-            //                     : Colors.transparent,
-            //                 borderRadius: BorderRadius.circular(10),
-            //               ),
-            //               child: Center(
-            //                 child: Text(
-            //                   "This Week",
-            //                   style: TextStyle(
-            //                     color: snapshot.data == Period.Week
-            //                         ? Color(0xFF3EB16F)
-            //                         : Color(0xFFB0F3CB),
-            //                     fontSize: 15,
-            //                     fontWeight: FontWeight.w700,
-            //                   ),
-            //                 ),
-            //               ),
-            //             ),
-            //           ),
-            //           GestureDetector(
-            //             onTap: () {
-            //               globalBloc.updateSelectedPeriod(Period.Month);
-            //             },
-            //             child: Container(
-            //               height: 30,
-            //               width: 100,
-            //               decoration: BoxDecoration(
-            //                 color: snapshot.data == Period.Month
-            //                     ? Colors.white
-            //                     : Colors.transparent,
-            //                 borderRadius: BorderRadius.circular(10),
-            //               ),
-            //               child: Center(
-            //                 child: Text(
-            //                   "This Month",
-            //                   style: TextStyle(
-            //                     color: snapshot.data == Period.Month
-            //                         ? Color(0xFF3EB16F)
-            //                         : Color(0xFFB0F3CB),
-            //                     fontSize: 15,
-            //                     fontWeight: FontWeight.w700,
-            //                   ),
-            //                 ),
-            //               ),
-            //             ),
-            //           ),
-            //           GestureDetector(
-            //             onTap: () {
-            //               globalBloc.updateSelectedPeriod(Period.Year);
-            //             },
-            //             child: Container(
-            //               height: 30,
-            //               width: 100,
-            //               decoration: BoxDecoration(
-            //                 color: snapshot.data == Period.Year
-            //                     ? Colors.white
-            //                     : Colors.transparent,
-            //                 borderRadius: BorderRadius.circular(10),
-            //               ),
-            //               child: Center(
-            //                 child: Text(
-            //                   "This Year",
-            //                   style: TextStyle(
-            //                     color: snapshot.data == Period.Year
-            //                         ? Color(0xFF3EB16F)
-            //                         : Color(0xFFB0F3CB),
-            //                     fontSize: 15,
-            //                     fontWeight: FontWeight.w700,
-            //                   ),
-            //                 ),
-            //               ),
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     );
-            //   },
-          ],
-        ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -252,7 +152,7 @@ class BottomContainer extends StatelessWidget {
             color: Color(0xFFF6F8FC),
             child: Center(
               child: Text(
-                "Press + to add a reminder",
+                "Press + to add a Mediminder",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 24,

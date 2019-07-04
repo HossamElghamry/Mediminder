@@ -57,7 +57,7 @@ class _NewEntryState extends State<NewEntry> {
         ),
         centerTitle: true,
         title: Text(
-          "Add New Reminder",
+          "Add New Mediminder",
           style: TextStyle(
             color: Colors.black,
             fontSize: 18,
@@ -175,10 +175,10 @@ class _NewEntryState extends State<NewEntry> {
                     shape: StadiumBorder(),
                     child: Center(
                       child: Text(
-                        "CONFIRM",
+                        "Confirm",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 22,
+                          fontSize: 26,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -271,13 +271,13 @@ class _NewEntryState extends State<NewEntry> {
       (EntryError error) {
         switch (error) {
           case EntryError.NameNull:
-            displayError("Medicine Name field should not be empty");
+            displayError("Please enter the medicine's name");
             break;
           case EntryError.NameDuplicate:
             displayError("Medicine name already exists");
             break;
           case EntryError.Dosage:
-            displayError("Medicine Dosage should not be empty");
+            displayError("Please enter the dosage required");
             break;
           case EntryError.Interval:
             displayError("Please select the reminder's interval");
