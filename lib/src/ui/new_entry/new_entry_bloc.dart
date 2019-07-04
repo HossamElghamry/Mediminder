@@ -26,7 +26,7 @@ class NewEntryBloc {
     // _checkedDays$ = BehaviorSubject<List<Day>>.seeded([]);
     _selectedTimeOfDay$ = BehaviorSubject<String>.seeded("None");
     _selectedInterval$ = BehaviorSubject<int>.seeded(0);
-    _errorState$ = BehaviorSubject<EntryError>.seeded(EntryError.None);
+    _errorState$ = BehaviorSubject<EntryError>();
   }
 
   void dispose() {
@@ -43,19 +43,22 @@ class NewEntryBloc {
   void errorCheck(String medicineName, List<Medicine> medicineList) {
     for (var medicine in medicineList) {
       if (medicineName == medicine.medicineName) {
+        print("no dup");
         _errorState$.add(EntryError.NameDuplicate);
         return;
       }
     }
     if (_selectedInterval$.value == 0) {
+      print("no interval");
       _errorState$.add(EntryError.Interval);
       return;
     }
     if (_selectedTimeOfDay$.value == "None") {
+      print("no start");
       _errorState$.add(EntryError.StartTime);
       return;
     }
-    _errorState$.add(EntryError.None);
+    return;
   }
 
   void updateInterval(int interval) {

@@ -125,7 +125,7 @@ class MainSection extends StatelessWidget {
     return Hero(
       tag: medicine.medicineName + medicine.medicineType,
       child: Icon(
-        Icons.error,
+        Icons.local_hospital,
         color: Color(0xFF3EB16F),
         size: size,
       ),
@@ -214,7 +214,9 @@ class ExtendedSection extends StatelessWidget {
         children: <Widget>[
           ExtendedInfoTab(
             fieldTitle: "Medicine Type",
-            fieldInfo: medicine.medicineType,
+            fieldInfo: medicine.medicineType == "None"
+                ? "Not Specified"
+                : medicine.medicineType,
           ),
           ExtendedInfoTab(
             fieldTitle: "Dose",
