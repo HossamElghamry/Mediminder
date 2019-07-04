@@ -16,13 +16,9 @@ class _SuccessScreenState extends State<SuccessScreen> {
     Timer(
       Duration(milliseconds: 3000),
       () {
-        Navigator.pushReplacement(
+        Navigator.popUntil(
           context,
-          MaterialPageRoute(
-            builder: (BuildContext context) {
-              return HomePage();
-            },
-          ),
+          ModalRoute.withName('/'),
         );
       },
     );
