@@ -1,35 +1,44 @@
-# Medicine Reminder
+<h1 align="center">Mediminder</h1>
 
-An offline medicine reminder, built with Flutter, Provider and BLoC pattern.
+<div align="center">
+  <strong>An Offline Medicine Reminder</strong>
+</div>
+<div align="center">
+  Built with Flutter, Provider and BLoC pattern
+</div>
 
-## Current Features
-[✓] Shared preference data storage
-
-[✓] Homepage medicine list
-
-[✓] Register a new reminder
-
-[✓] Interval picker
-
-[✓] Optional medicine symbol choice
-
-[✓] Individual medicine detail page
-
-[✓] Beautiful UI
-
-
-## TODO List
-
-᛫ Notification implementation
-
-᛫ Registeration error checking
-
-᛫ Delete a reminder
+## Key Features
+* __Homepage medicine list__ 
+  * Homepage containing all the registered Mediminders
+* __Shared preference data storage__ 
+  * Storing medicine objects in shared preference
+  * Medicine list retrieval upon application launch
+  * JSON encoding and decoding
+* __Adding new Mediminder, details include:__ 
+  * Medicine name
+  * Dosage in milligrams
+  * Medicine icon selection (Optional)
+  * Reminder interval selection
+  * Starting time using Time Picker
+* __Notification reminding__
+  * Usage of Local Notifications to display Mediminders
+  * Randomly-generated IDs for each notification
+  * Daily reminders with set intervals, based on user preference
+* __Registeration error checking__ 
+  * Name duplication check
+  * Empty/not specified fields check
+  * Medicine type is optional
+* __Individual medicine detail page__ 
+  * In-depth details about each Mediminder upon tapping
+* __Delete a Mediminder:__ 
+  * Erase the specified medicine object from shared preference and list
+  * Erase corresponding scheduled notifications 
 
 
 # Screenshots
 
 
-<img src="/Medicine_reminder_1.jpg" width="250"> <img src="/Medicine_reminder_3.jpg" width="250"> <img src="Medicine_reminder_4.jpg" width="250"><img src="Medicine_reminder_2.jpg" width="250">
-<img src="/Medicine_reminder_5.jpg" width="250">  
+<img src="screenshots/Mediminder_Home Screen.jpg" width="250"> <img src="screenshots/Mediminder_Register Screen.jpg" width="250"> <img src="screenshots/Mediminder_ Register Error.jpg" width="250"><img src="screenshots/Mediminder_Time Picker.jpg" width="250"> <img src="screenshots/Mediminder_Data Filled.jpg" width="250"> <img src="screenshots/Mediminder_Register Success.jpg" width="250">  <img src="screenshots/Mediminder_Home Screen with Medicine.jpg" width="250">  <img src="screenshots/Mediminder_Details Screen.jpg" width="250">  
+
+
 
