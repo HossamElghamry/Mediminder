@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:medicine_reminder/src/global_bloc.dart';
-import 'package:medicine_reminder/src/models/duration.dart';
 import 'package:medicine_reminder/src/models/medicine.dart';
 import 'package:medicine_reminder/src/ui/medicine_details/medicine_details.dart';
 import 'package:medicine_reminder/src/ui/new_entry/new_entry.dart';
@@ -25,6 +24,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 0.0,
       ),
       body: Container(
+        color: Color(0xFFF6F8FC),
         child: Column(
           children: <Widget>[
             Flexible(
@@ -52,6 +52,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        elevation: 15,
         backgroundColor: Color(0xFF3EB16F),
         child: Icon(
           Icons.add,
@@ -59,7 +60,9 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => NewEntry()),
+            MaterialPageRoute(
+              builder: (context) => NewEntry(),
+            ),
           );
         },
       ),
@@ -72,21 +75,27 @@ class TopContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final GlobalBloc globalBloc = Provider.of<GlobalBloc>(context);
     return Container(
-      color: Color(0xFF3EB16F),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.elliptical(50, 27),
+          bottomRight: Radius.elliptical(50, 27),
+        ),
+        color: Color(0xFF3EB16F),
+      ),
       width: double.infinity,
       child: Container(
         child: Column(
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(
-                bottom: 30,
-                top: 20,
+                bottom: 40,
+                top: 15,
               ),
               child: Text(
                 "Medicine Reminder",
                 style: TextStyle(
                   fontFamily: "Neu",
-                  fontSize: 30,
+                  fontSize: 31,
                   fontWeight: FontWeight.w300,
                   color: Colors.white,
                 ),
@@ -240,6 +249,7 @@ class BottomContainer extends StatelessWidget {
           return Container();
         } else if (snapshot.data.length == 0) {
           return Container(
+            color: Color(0xFFF6F8FC),
             child: Center(
               child: Text(
                 "Press + to add a reminder",
@@ -255,8 +265,9 @@ class BottomContainer extends StatelessWidget {
           return Container(
             color: Color(0xFFF6F8FC),
             child: GridView.builder(
-              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2),
+              padding: EdgeInsets.only(top: 12),
+              gridDelegate:
+                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 return MedicineCard(snapshot.data[index]);
@@ -373,7 +384,7 @@ class MedicineCard extends StatelessWidget {
                 Text(
                   medicine.interval == 1
                       ? "Every " + medicine.interval.toString() + " hour"
-                      : "Every " + medicine.interval.toString() + " hour(s)",
+                      : "Every " + medicine.interval.toString() + " hours",
                   style: TextStyle(
                       fontSize: 16,
                       color: Color(0xFFC9C9C9),

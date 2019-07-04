@@ -7,6 +7,7 @@ import 'package:medicine_reminder/src/models/medicine.dart';
 import 'package:medicine_reminder/src/models/medicine_type.dart';
 import 'package:medicine_reminder/src/ui/homepage/homepage.dart';
 import 'package:medicine_reminder/src/ui/new_entry/new_entry_bloc.dart';
+import 'package:medicine_reminder/src/ui/success_screen/success_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -246,10 +247,10 @@ class _NewEntryState extends State<NewEntry> {
                         dosage = int.parse(dosageController.value.text);
                       }
 
-                      _newEntryBloc.errorCheck(
-                        medicineName,
-                        _globalBloc.medicineList$.value,
-                      );
+                      // _newEntryBloc.errorCheck(
+                      //   medicineName,
+                      //   _globalBloc.medicineList$.value,
+                      // );
 
                       String medicineType = _newEntryBloc
                           .selectedMedicineType.value
@@ -273,7 +274,15 @@ class _NewEntryState extends State<NewEntry> {
                       );
                       _globalBloc.updateMedicineList(newEntryMedicine);
                       scheduleNotification(newEntryMedicine);
-                      Navigator.of(context).pop();
+
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return SuccessScreen();
+                          },
+                        ),
+                      );
                     },
                     child: Center(
                       child: Text(

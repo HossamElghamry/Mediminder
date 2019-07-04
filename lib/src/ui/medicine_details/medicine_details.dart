@@ -59,7 +59,7 @@ class MedicineDetails extends StatelessWidget {
                         },
                         child: Center(
                           child: Text(
-                            "DELETE MEDICINE",
+                            "Delete Reminder",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 22,
