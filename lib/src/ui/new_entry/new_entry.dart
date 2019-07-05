@@ -69,13 +69,16 @@ class _NewEntryState extends State<NewEntry> {
         child: Provider<NewEntryBloc>.value(
           value: _newEntryBloc,
           child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            padding: EdgeInsets.symmetric(
+              horizontal: 25,
+            ),
             children: <Widget>[
               PanelTitle(
                 title: "Medicine Name",
                 isRequired: true,
               ),
               TextFormField(
+                maxLength: 12,
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -85,12 +88,9 @@ class _NewEntryState extends State<NewEntry> {
                   border: UnderlineInputBorder(),
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
               PanelTitle(
                 title: "Dosage in mg",
-                isRequired: true,
+                isRequired: false,
               ),
               TextFormField(
                 controller: dosageController,
@@ -103,6 +103,10 @@ class _NewEntryState extends State<NewEntry> {
                   border: UnderlineInputBorder(),
                 ),
               ),
+              SizedBox(
+                height: 15,
+              ),
+
               PanelTitle(
                 title: "Medicine Type",
                 isRequired: false,
@@ -178,7 +182,7 @@ class _NewEntryState extends State<NewEntry> {
                         "Confirm",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 26,
+                          fontSize: 28,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -188,23 +192,18 @@ class _NewEntryState extends State<NewEntry> {
                       int dosage;
                       //--------------------Error Checking------------------------
                       //Had to do error checking in UI
-                      //Due to unoptimized BLoC error checking architecture
+                      //Due to unoptimized BLoC value-grabbing architecture
                       if (nameController.text == "") {
-                        print("error");
                         _newEntryBloc.submitError(EntryError.NameNull);
                         return;
                       }
                       if (nameController.text != "") {
-                        print("noerror");
                         medicineName = nameController.text;
                       }
                       if (dosageController.text == "") {
-                        print("error");
-                        _newEntryBloc.submitError(EntryError.Dosage);
-                        return;
+                        dosage = 0;
                       }
                       if (dosageController.text != "") {
-                        print("noerror");
                         dosage = int.parse(dosageController.text);
                       }
                       for (var medicine in _globalBloc.medicineList$.value) {
@@ -312,7 +311,7 @@ class _NewEntryState extends State<NewEntry> {
 
   initializeNotifications() async {
     var initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/launcher_icon');
     var initializationSettingsIOS = IOSInitializationSettings();
     var initializationSettings = InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
@@ -353,8 +352,10 @@ class _NewEntryState extends State<NewEntry> {
       }
       await flutterLocalNotificationsPlugin.showDailyAtTime(
           int.parse(medicine.notificationIDs[i]),
-          'Medicine Reminder: ${medicine.medicineName}',
-          'It is time to take your ${medicine.medicineName + " " + medicine.medicineType}, according to schedule',
+          'Mediminder: ${medicine.medicineName}',
+          medicine.medicineType.toString() == MedicineType.None.toString()
+              ? 'It is time to take your ${medicine.medicineType.toLowerCase()}, according to schedule'
+              : 'It is to time to take your medicine, according to schedule',
           Time(hour, minute, 0),
           platformChannelSpecifics);
       hour = ogValue;
@@ -395,6 +396,7 @@ class _IntervalSelectionState extends State<IntervalSelection> {
               ),
             ),
             DropdownButton<int>(
+              iconEnabledColor: Color(0xFF3EB16F),
               hint: _selected == 0
                   ? Text(
                       "Select an Interval",
@@ -470,42 +472,28 @@ class _SelectTimeState extends State<SelectTime> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 8.0, bottom: 4),
-            child: FlatButton(
-              color: Color(0xFF3EB16F),
-              shape: StadiumBorder(),
-              onPressed: () {
-                _selectTime(context);
-              },
-              child: Center(
-                child: Text(
-                  _clicked == false ? "Pick Time" : "Edit Time",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Center(
+      height: 60,
+      child: Padding(
+        padding: EdgeInsets.only(top: 10.0, bottom: 4),
+        child: FlatButton(
+          color: Color(0xFF3EB16F),
+          shape: StadiumBorder(),
+          onPressed: () {
+            _selectTime(context);
+          },
+          child: Center(
             child: Text(
               _clicked == false
-                  ? ""
-                  : "Selected starting time: ${convertTime(_time.hour.toString())}:${convertTime(_time.minute.toString())}",
+                  ? "Pick Time"
+                  : "${convertTime(_time.hour.toString())}:${convertTime(_time.minute.toString())}",
               style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
+                color: Colors.white,
+                fontSize: 20,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

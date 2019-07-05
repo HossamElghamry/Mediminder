@@ -40,27 +40,6 @@ class NewEntryBloc {
     _errorState$.add(error);
   }
 
-  void errorCheck(String medicineName, List<Medicine> medicineList) {
-    for (var medicine in medicineList) {
-      if (medicineName == medicine.medicineName) {
-        print("no dup");
-        _errorState$.add(EntryError.NameDuplicate);
-        return;
-      }
-    }
-    if (_selectedInterval$.value == 0) {
-      print("no interval");
-      _errorState$.add(EntryError.Interval);
-      return;
-    }
-    if (_selectedTimeOfDay$.value == "None") {
-      print("no start");
-      _errorState$.add(EntryError.StartTime);
-      return;
-    }
-    return;
-  }
-
   void updateInterval(int interval) {
     _selectedInterval$.add(interval);
   }

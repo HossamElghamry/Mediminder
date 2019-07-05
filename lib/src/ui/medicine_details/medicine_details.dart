@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:medicine_reminder/src/models/medicine.dart';
 import 'package:provider/provider.dart';
 
@@ -42,39 +43,136 @@ class MedicineDetails extends StatelessWidget {
               ),
               ExtendedSection(medicine: medicine),
               Padding(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.height * 0.06,
-                    right: MediaQuery.of(context).size.height * 0.06,
-                    top: 25,
-                  ),
-                  child: Container(
-                      width: 280,
-                      height: 70,
-                      child: FlatButton(
-                        color: Color(0xFF3EB16F),
-                        shape: StadiumBorder(),
-                        onPressed: () {
-                          _globalBloc.removeMedicine(medicine);
-                          Navigator.of(context).pop();
-                        },
-                        child: Center(
-                          child: Text(
-                            "Delete Mediminder",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
+                padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.height * 0.06,
+                  right: MediaQuery.of(context).size.height * 0.06,
+                  top: 25,
+                ),
+                child: Container(
+                  width: 280,
+                  height: 70,
+                  child: FlatButton(
+                    color: Color(0xFF3EB16F),
+                    shape: StadiumBorder(),
+                    onPressed: () {
+                      openAlertBox(context, _globalBloc);
+                    },
+                    child: Center(
+                      child: Text(
+                        "Delete Mediminder",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
                         ),
-                      ))),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
   }
+
+  openAlertBox(BuildContext context, GlobalBloc _globalBloc) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(30.0),
+              ),
+            ),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            content: Container(
+              width: 300.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(18),
+                    child: Center(
+                      child: Text(
+                        "Delete this Mediminder?",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {
+                          _globalBloc.removeMedicine(medicine);
+                          Navigator.popUntil(
+                            context,
+                            ModalRoute.withName('/'),
+                          );
+                        },
+                        child: InkWell(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 2.743,
+                            padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                            decoration: BoxDecoration(
+                              color: Color(0xFF3EB16F),
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(30.0),
+                              ),
+                            ),
+                            child: Text(
+                              "Yes",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: InkWell(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 2.743,
+                            padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                            decoration: BoxDecoration(
+                              color: Colors.red[700],
+                              borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(30.0)),
+                            ),
+                            child: Text(
+                              "No",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
 }
+// _globalBloc.removeMedicine(medicine);
+//                       Navigator.of(context).pop()
 
 class MainSection extends StatelessWidget {
   final Medicine medicine;
@@ -155,7 +253,9 @@ class MainSection extends StatelessWidget {
               ),
               MainInfoTab(
                 fieldTitle: "Dosage",
-                fieldInfo: medicine.dosage.toString() + " mg",
+                fieldInfo: medicine.dosage == 0
+                    ? "Not Specified"
+                    : medicine.dosage.toString() + " mg",
               )
             ],
           )
@@ -191,7 +291,7 @@ class MainInfoTab extends StatelessWidget {
           Text(
             fieldInfo,
             style: TextStyle(
-                fontSize: 26,
+                fontSize: 24,
                 color: Color(0xFF3EB16F),
                 fontWeight: FontWeight.bold),
           ),
@@ -222,9 +322,8 @@ class ExtendedSection extends StatelessWidget {
             fieldTitle: "Dose Interval",
             fieldInfo: "Every " +
                 medicine.interval.toString() +
-                " hour(s)  |  " +
-                (24 / medicine.interval).floor().toString() +
-                " time(s) a day",
+                " hours  | " +
+                " ${medicine.interval == 24 ? "One time a day" : (24 / medicine.interval).floor().toString() + " times a day"}",
           ),
           ExtendedInfoTab(
               fieldTitle: "Start Time",
