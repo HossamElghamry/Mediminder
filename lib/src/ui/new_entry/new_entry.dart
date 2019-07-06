@@ -335,15 +335,17 @@ class _NewEntryState extends State<NewEntry> {
     var minute = int.parse(medicine.startTime[2] + medicine.startTime[3]);
 
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'repeatDailyAtTime channel id',
-        'repeatDailyAtTime channel name',
-        'repeatDailyAtTime description',
-        importance: Importance.Max,
-        sound: 'sound',
-        enableLights: true,
-        priority: Priority.High);
-    var iOSPlatformChannelSpecifics =
-        IOSNotificationDetails(sound: 'sound.aiff');
+      'repeatDailyAtTime channel id',
+      'repeatDailyAtTime channel name',
+      'repeatDailyAtTime description',
+      importance: Importance.Max,
+      sound: 'sound',
+      ledColor: Color(0xFF3EB16F),
+      ledOffMs: 1000,
+      ledOnMs: 1000,
+      enableLights: true,
+    );
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
