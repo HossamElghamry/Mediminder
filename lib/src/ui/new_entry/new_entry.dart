@@ -339,8 +339,11 @@ class _NewEntryState extends State<NewEntry> {
         'repeatDailyAtTime channel name',
         'repeatDailyAtTime description',
         importance: Importance.Max,
+        sound: 'sound',
+        enableLights: true,
         priority: Priority.High);
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var iOSPlatformChannelSpecifics =
+        IOSNotificationDetails(sound: 'sound.aiff');
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
@@ -353,9 +356,9 @@ class _NewEntryState extends State<NewEntry> {
       await flutterLocalNotificationsPlugin.showDailyAtTime(
           int.parse(medicine.notificationIDs[i]),
           'Mediminder: ${medicine.medicineName}',
-          medicine.medicineType.toString() == MedicineType.None.toString()
+          medicine.medicineType.toString() != MedicineType.None.toString()
               ? 'It is time to take your ${medicine.medicineType.toLowerCase()}, according to schedule'
-              : 'It is to time to take your medicine, according to schedule',
+              : 'It is time to take your medicine, according to schedule',
           Time(hour, minute, 0),
           platformChannelSpecifics);
       hour = ogValue;

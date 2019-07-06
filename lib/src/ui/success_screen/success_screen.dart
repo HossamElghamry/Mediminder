@@ -14,7 +14,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
   void initState() {
     super.initState();
     Timer(
-      Duration(milliseconds: 3000),
+      Duration(milliseconds: 2200),
       () {
         Navigator.popUntil(
           context,
