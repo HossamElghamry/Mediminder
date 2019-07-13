@@ -117,7 +117,7 @@ class TopContainer extends StatelessWidget {
             stream: globalBloc.medicineList$,
             builder: (context, snapshot) {
               return Padding(
-                padding: EdgeInsets.only(top: 16.0, bottom: 5),
+                padding: EdgeInsets.only(top: 16.0, bottom: 5 ),
                 child: Center(
                   child: Text(
                     !snapshot.hasData ? '0' : snapshot.data.length.toString(),
