@@ -36,9 +36,8 @@
 
 
 # Screenshots
+<pre>
+<img src="screenshots/Mediminder_Home Screen.jpg" width="250"> <img src="screenshots/Mediminder_Register Screen.jpg" width="250"> <img src="screenshots/Mediminder_ Register Error.jpg" width="250"> <img src="screenshots/Mediminder_Time Picker.jpg" width="250"> <img src="screenshots/Mediminder_Data Filled.jpg" width="250"> <img src="screenshots/Mediminder_Register Success.jpg" width="250"> <img src="screenshots/Mediminder_Home Screen with Medicine.jpg" width="250"> <img src="screenshots/Mediminder_Details Screen.jpg" width="250">  
 
-
-<img src="screenshots/Mediminder_Home Screen.jpg" width="250"> <img src="screenshots/Mediminder_Register Screen.jpg" width="250"> <img src="screenshots/Mediminder_ Register Error.jpg" width="250"><img src="screenshots/Mediminder_Time Picker.jpg" width="250"> <img src="screenshots/Mediminder_Data Filled.jpg" width="250"> <img src="screenshots/Mediminder_Register Success.jpg" width="250">  <img src="screenshots/Mediminder_Home Screen with Medicine.jpg" width="250">  <img src="screenshots/Mediminder_Details Screen.jpg" width="250">  
-
-
+</pre>
 
