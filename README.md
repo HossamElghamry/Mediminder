@@ -3,6 +3,7 @@
 <div align="center">
   <strong>An Offline Medicine Reminder</strong>
 </div>
+
 <div align="center">
   Built with Flutter, Provider and BLoC pattern
 </div>
@@ -37,7 +38,7 @@
 
 # Screenshots
 <pre>
-<img src="screenshots/Mediminder_Home Screen.jpg" width="250"> <img src="screenshots/Mediminder_Register Screen.jpg" width="250"> <img src="screenshots/Mediminder_ Register Error.jpg" width="250"> <img src="screenshots/Mediminder_Time Picker.jpg" width="250"> <img src="screenshots/Mediminder_Data Filled.jpg" width="250"> <img src="screenshots/Mediminder_Register Success.jpg" width="250"> <img src="screenshots/Mediminder_Home Screen with Medicine.jpg" width="250"> <img src="screenshots/Mediminder_Details Screen.jpg" width="250">  
+<img src="screenshots/7.jpg" width="250"> <img src="screenshots/2.jpg" width="250"> <img src="screenshots/3.jpg" width="250"> <img src="screenshots/4.jpg" width="250"> <img src="screenshots/5.jpg" width="250"> <img src="screenshots/6.jpg" width="250"> <img src="screenshots/1.jpg" width="250"> <img src="screenshots/8.jpg" width="250">  
 
 </pre>
 
